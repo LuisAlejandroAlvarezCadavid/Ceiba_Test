@@ -25,14 +25,17 @@ namespace ProductOrderApi.Services
         public async Task<Order> CreateOrder(CreateOrderModel order)
         {
             var products = await _productRepository.GetProducts();
-            var toalPrice = order.OrderProducts.Join(products, productOrder => productOrder.ProductId, product => product.Id, (productOrder, product) => new { productOrder.Quantity, product.Price }).Sum(relation => relation.Quantity * relation.Price);
+            var orderedProducts = order.OrderProducts.Join(products, productOrder => productOrder.ProductId, product => product.Id, (productOrder, product) => new { productOrder.Quantity, product.Price, productOrder.ProductId });
+            var totalPrice = orderedProducts.Sum(relation => relation.Quantity * relation.Price);
             var id = (await _orderRepository.GetOrdersAsync()).Max(order => order.Id) + 1;
-            Order newOrder = new Order
+            var orderId = 1;
+            var orderProduct = orderedProducts.Select(product => new OrderProduct { Id = orderId++, OrderId = id, Price = product.Price, ProductId = product.ProductId, Quantity = product.Quantity }).ToList();
+            Order newOrder = new()
             {
                 Id = id,
                 OrderDate = DateTime.Now,
-                TotalPrice = toalPrice
-
+                TotalPrice = totalPrice,
+                OrderProducts = orderProduct
             };
             return await _orderRepository.CreateOrderAsync(newOrder);
         }

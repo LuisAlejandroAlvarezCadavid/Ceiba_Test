@@ -17,27 +17,30 @@ namespace ProductOrderApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-            throw new NotImplementedException();
+            return Ok(await _orderService.GetOrders());
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(int id)
         {
-            throw new NotImplementedException();
+            var order = await _orderService.GetOrder(id);
+            return order == null ? NotFound() : Ok(order);
         }
         [HttpPost]
         public async Task<ActionResult<Order>> AddOrder(CreateOrderModel model)
         {
-            return await _orderService.CreateOrder(model);
+            return Ok(await _orderService.CreateOrder(model));
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOrder(int id, Order order)
         {
-            throw new NotImplementedException();
+            var updateOrder = await _orderService.UpdateOrder(order);
+            return updateOrder == null ? BadRequest() : NoContent();
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
-            throw new NotImplementedException();
+            return (await _orderService.DeleteOrder(id)) ? NoContent() : NotFound();
+
         }
     }
 }

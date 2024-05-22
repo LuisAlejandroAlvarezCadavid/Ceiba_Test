@@ -94,7 +94,7 @@ namespace ProductOrderApi.Tests
                 Name = "Test Product",
                 Price = 10.00m
             };
-            var response = await _client.PutAsync("/api/products/1", new StringContent(JsonConvert.SerializeObject(product), Encoding.UTF8, "application/json"));
+            var response = await _client.PutAsync("/api/products/S", new StringContent(JsonConvert.SerializeObject(product), Encoding.UTF8, "application/json"));
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
         [Fact]
@@ -165,7 +165,15 @@ namespace ProductOrderApi.Tests
                 throw new ArgumentNullException(nameof(order));
             }
             order.OrderDate = DateTime.Now;
-            var response = await _client.PutAsync($"/api/orders/{order.Id}", new StringContent(JsonConvert.SerializeObject(order), Encoding.UTF8, "application/json"));
+
+            var updateOrder = new Order
+            {
+                Id = order.Id,
+                OrderDate = order.OrderDate,
+                TotalPrice = order.TotalPrice
+            };
+
+            var response = await _client.PutAsync($"/api/orders/{order.Id}", new StringContent(JsonConvert.SerializeObject(updateOrder), Encoding.UTF8, "application/json"));
             response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }

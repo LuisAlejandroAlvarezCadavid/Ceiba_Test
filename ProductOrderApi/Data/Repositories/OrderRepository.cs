@@ -30,7 +30,7 @@ namespace ProductOrderApi.Data.Repositories
             await _context.SaveChangesAsync();
             return order;
         }
-        public async Task<Order> UpdateOrderAsync(Order order)
+        public async Task<Order?> UpdateOrderAsync(Order order)
         {
             if (!await _context.Orders.AnyAsync(p => p.Id == order.Id))
             {

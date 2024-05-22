@@ -18,7 +18,7 @@ namespace ProductOrderApi.Services
         {
             return await _orderRepository.GetOrdersAsync();
         }
-        public async Task<Order> GetOrder(int id)
+        public async Task<Order?> GetOrder(int id)
         {
             return await _orderRepository.GetOrderAsync(id);
         }
@@ -29,7 +29,7 @@ namespace ProductOrderApi.Services
             var totalPrice = orderedProducts.Sum(relation => relation.Quantity * relation.Price);
             var orders = await _orderRepository.GetOrdersAsync();
             var id = orders.Any() ? orders.Max(order => order.Id) + 1 : 1;
-            var orderId = 1;
+            var orderId = orders.Any() ? orders.SelectMany(order => order.OrderProducts!).Max(order => order.Id) + 1 : 1;
             var orderProduct = orderedProducts.Select(product => new OrderProduct { Id = orderId++, OrderId = id, Price = product.Price, ProductId = product.ProductId, Quantity = product.Quantity }).ToList();
             Order newOrder = new()
             {
@@ -40,13 +40,13 @@ namespace ProductOrderApi.Services
             };
             return await _orderRepository.CreateOrderAsync(newOrder);
         }
-        public async Task<Order> UpdateOrder(Order order)
+        public async Task<Order?> UpdateOrder(Order order)
         {
             return await _orderRepository.UpdateOrderAsync(order);
         }
-        public async Task DeleteOrder(int id)
+        public async Task<bool> DeleteOrder(int id)
         {
-            await _orderRepository.DeleteOrderAsync(id);
+            return await _orderRepository.DeleteOrderAsync(id);
         }
     }
 }

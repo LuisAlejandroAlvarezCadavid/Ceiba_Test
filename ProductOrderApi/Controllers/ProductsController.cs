@@ -21,7 +21,8 @@ namespace ProductOrderApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            throw new NotImplementedException();
+            var product = await _productService.GetProduct(id);
+            return product == null ? NotFound() : Ok(product);
         }
         [HttpPost]
         public async Task<ActionResult<Product>> AddProduct(Product product)
@@ -31,12 +32,14 @@ namespace ProductOrderApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(int id, Product product)
         {
-            throw new NotImplementedException();
+            var updateProduct = await _productService.UpdateProduct(product);
+            return updateProduct == null ? NotFound() : NoContent();
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            throw new NotImplementedException();
+            await _productService.DeleteProduct(id);
+            return NoContent();
         }
     }
 }

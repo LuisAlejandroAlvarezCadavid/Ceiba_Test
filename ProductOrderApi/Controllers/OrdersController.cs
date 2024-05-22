@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProductOrderApi.Data.Entities;
 using ProductOrderApi.Data.Models;
 using ProductOrderApi.Services;
@@ -28,7 +27,7 @@ namespace ProductOrderApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Order>> AddOrder(CreateOrderModel model)
         {
-            throw new NotImplementedException();
+            return await _orderService.CreateOrder(model);
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOrder(int id, Order order)

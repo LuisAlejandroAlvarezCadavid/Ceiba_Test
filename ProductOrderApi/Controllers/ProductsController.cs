@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProductOrderApi.Data.Entities;
-using ProductOrderApi.Helpers;
 using ProductOrderApi.Services;
 
 namespace ProductOrderApi.Controllers
@@ -28,7 +26,7 @@ namespace ProductOrderApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> AddProduct(Product product)
         {
-            throw new NotImplementedException();
+            return await _productService.AddProduct(product);
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(int id, Product product)
@@ -39,6 +37,6 @@ namespace ProductOrderApi.Controllers
         public async Task<IActionResult> DeleteProduct(int id)
         {
             throw new NotImplementedException();
-        }       
+        }
     }
 }

@@ -24,7 +24,17 @@ namespace ProductOrderApi.Services
         }
         public async Task<Order> CreateOrder(CreateOrderModel order)
         {
-            throw new NotImplementedException("Please implement CreateOrder method!");
+            var products = await _productRepository.GetProducts();
+            var toalPrice = order.OrderProducts.Join(products, productOrder => productOrder.ProductId, product => product.Id, (productOrder, product) => new { productOrder.Quantity, product.Price }).Sum(relation => relation.Quantity * relation.Price);
+            var id = (await _orderRepository.GetOrdersAsync()).Max(order => order.Id) + 1;
+            Order newOrder = new Order
+            {
+                Id = id,
+                OrderDate = DateTime.Now,
+                TotalPrice = toalPrice
+
+            };
+            return await _orderRepository.CreateOrderAsync(newOrder);
         }
         public async Task<Order> UpdateOrder(Order order)
         {

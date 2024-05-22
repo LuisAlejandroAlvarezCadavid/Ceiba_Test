@@ -27,7 +27,8 @@ namespace ProductOrderApi.Services
             var products = await _productRepository.GetProducts();
             var orderedProducts = order.OrderProducts.Join(products, productOrder => productOrder.ProductId, product => product.Id, (productOrder, product) => new { productOrder.Quantity, product.Price, productOrder.ProductId });
             var totalPrice = orderedProducts.Sum(relation => relation.Quantity * relation.Price);
-            var id = (await _orderRepository.GetOrdersAsync()).Max(order => order.Id) + 1;
+            var orders = await _orderRepository.GetOrdersAsync();
+            var id = orders.Any() ? orders.Max(order => order.Id) + 1 : 1;
             var orderId = 1;
             var orderProduct = orderedProducts.Select(product => new OrderProduct { Id = orderId++, OrderId = id, Price = product.Price, ProductId = product.ProductId, Quantity = product.Quantity }).ToList();
             Order newOrder = new()

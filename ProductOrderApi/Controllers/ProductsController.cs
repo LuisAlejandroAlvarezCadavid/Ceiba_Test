@@ -14,9 +14,9 @@ namespace ProductOrderApi.Controllers
             _productService = productService;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<IEnumerable<Product>> GetProducts()
         {
-            throw new NotImplementedException();
+            return await _productService.GetProducts();
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
